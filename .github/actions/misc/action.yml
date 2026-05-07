@@ -36,7 +36,7 @@ runs:
         set -euo pipefail
         echo "Add Build based configs"
         cat >> "${{ github.workspace }}/wild_gki.fragment" << 'EOF'
-        CONFIG_ANDROID_BINDER_IPC_RUST=y
+        CONFIG_ANDROID_BINDER_IPC_RUST=m
         CONFIG_CMDLINE="module_blacklist=rust_binder"
         CONFIG_CMDLINE_EXTEND=y
         CONFIG_CMDLINE_FORCE=n
