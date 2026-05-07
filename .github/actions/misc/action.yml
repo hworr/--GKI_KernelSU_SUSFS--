@@ -24,5 +24,6 @@ runs:
         CONFIG_KALLSYMS=y
         CONFIG_KALLSYMS_ALL=y
 
-        # CONFIG_TRIM_UNUSED_KSYMS is not set
         EOF
+        # CONFIG_TRIM_UNUSED_KSYMS is not set
+        # add this here for later
