@@ -19,18 +19,7 @@ runs:
         set -euo pipefail
         curl -L https://raw.githubusercontent.com/ahmed-alnassif/GKI-Duchamp/dev/kernel-patches/bbrv3/bbrv3.patch | patch -p1
 
-    - name: Apply IP Tables Extensions
-      shell: bash
-      working-directory: ${{ github.workspace }}/kernel
-      run: |
-        cat >> "${{ github.workspace }}/wild_gki.fragment" << 'EOF'
-        CONFIG_NETFILTER_XT_MATCH_ADDRTYPE=y
-        CONFIG_NETFILTER_XT_SET=y
-        CONFIG_IP6_NF_NAT=y
-        CONFIG_IP6_NF_TARGET_MASQUERADE=y
-        EOF
-
-    - name: Apply IP Set Base
+    - name: Add IP SET & IPv6_NAT Support
       shell: bash
       working-directory: ${{ github.workspace }}/kernel
       run: |
