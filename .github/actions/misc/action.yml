@@ -31,7 +31,7 @@ runs:
 
     - name: Add RUST build configs
       shell: bash
-      if: ${{ inputs.kernel_version == '6.12' }}
+      if: ${{ inputs.kernel_version == '6.12' && false }}
       run: |
         set -euo pipefail
         echo "Add Build based configs"
