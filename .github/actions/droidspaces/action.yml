@@ -17,55 +17,43 @@ inputs:
 runs:
   using: composite
   steps:
+    - name: Download and Apply Droidspaces-OSS Patches
+      shell: bash
+      working-directory: ${{ github.workspace }}
+      run: |
+        git clone --depth=1 https://github.com/ravindu644/Droidspaces-OSS.git
+
     - name: Apply the SYSVIPC kABI fix
       shell: bash
-      if: false
       working-directory: ${{ github.workspace }}/kernel/common
       run: |
         if [ "${{ inputs.kernel_version }}" == "6.12" ]; then
-          curl -L https://raw.githubusercontent.com/ravindu644/Droidspaces-OSS/main/Documentation/resources/kernel-patches/GKI/kernel-6.12/001.GKI-6.12-or-above-fix_sysvipc_kabi.patch | patch -p1
-        #elif [ "${{ inputs.kernel_version }}" == "6.6" ] || [ "${{ inputs.kernel_version }}" == "6.1" ]; then
-        else
+          cp ${{ github.workspace }}/Droidspaces-OSS/Documentation/resources/kernel-patches/GKI/kernel-6.12/001.GKI-6.12-or-above-fix_sysvipc_kabi.patch ./
+        elif [ "${{ inputs.kernel_version }}" == "6.6" ] || [ "${{ inputs.kernel_version }}" == "6.1" ]; then
           #curl -L https://raw.githubusercontent.com/ravindu644/Droidspaces-OSS/main/Documentation/resources/kernel-patches/GKI/below-kernel-6.12/001.GKI-below-6.12-fix_sysvipc_kabi_1_2_3.patch | patch -p1
           #curl -L https://raw.githubusercontent.com/ravindu644/Droidspaces-OSS/main/Documentation/resources/kernel-patches/GKI/below-kernel-6.12/001.GKI-below-6.12-fix_sysvipc_kabi_3_4_5.patch | patch -p1
-          curl -L https://raw.githubusercontent.com/ravindu644/Droidspaces-OSS/main/Documentation/resources/kernel-patches/GKI/below-kernel-6.12/001.GKI-below-6.12-fix_sysvipc_kabi_6_7_8.patch | patch -p1
+          cp ${{ github.workspace }}/Droidspaces-OSS/main/Documentation/resources/kernel-patches/GKI/below-kernel-6.12/001.GKI-below-6.12-fix_sysvipc_kabi_6_7_8.patch ./
+          patch -p1 < 001.GKI-below-6.12-fix_sysvipc_kabi_6_7_8.patch
+        elif [ "${{ inputs.kernel_version }}" == "5.15" ]; then
+          cp ${{ github.workspace }}/Droidspaces-OSS/main/Documentation/resources/kernel-patches/GKI/below-kernel-6.12/001.GKI-below-6.12-fix_sysvipc_kabi_6_7_8.patch ./
+          patch -p1 < 001.GKI-below-6.12-fix_sysvipc_kabi_6_7_8.patch
+        elif [ "${{ inputs.kernel_version }}" == "5.10" ]; then
+          cp ${{ github.workspace }}/Droidspaces-OSS/main/Documentation/resources/kernel-patches/GKI/below-kernel-6.12/001.GKI-below-6.12-fix_sysvipc_kabi_6_7_8.patch ./
+          patch -p1 < 001.GKI-below-6.12-fix_sysvipc_kabi_6_7_8.patch
+          cp ${{ github.workspace }}/Droidspaces-OSS/main/Documentation/resources/kernel-patches/GKI/below-kernel-6.12/002.5.10_or_lower_use_android_abi_padding_for_posix_mqueue.patch ./
+          patch -p1 < 002.5.10_or_lower_use_android_abi_padding_for_posix_mqueue.patch
         fi
 
     - name: Enable Configs
       shell: bash
-      if: false
       working-directory: ${{ github.workspace }}/kernel
       run: |
         cat >> "${{ github.workspace }}/wild_gki.fragment" << 'EOF'
-        # Kernel configurations for full DroidSpaces support for GKI
-        # Copyright (C) 2026 ravindu644 <droidcasts@protonmail.com>
-
-        # IPC
         CONFIG_SYSVIPC=y
-        CONFIG_POSIX_MQUEUE=y
-
-        # Namespaces
-        CONFIG_IPC_NS=y
-        CONFIG_PID_NS=y
-
-        # HW Access Support
         CONFIG_DEVTMPFS=y
+        CONFIG_PID_NS=y
+        CONFIG_POSIX_MQUEUE=y
+        CONFIG_NETFILTER_XT_TARGET_REJECT=y
+        CONFIG_NETFILTER_XT_TARGET_LOG=y
+        CONFIG_NETFILTER_XT_MATCH_RECENT=y
         EOF
-
-    - name: Apply Android 15 6.6 Fixes
-      if: false
-      shell: bash
-      working-directory: ${{ github.workspace }}/kernel/common
-      run: |
-        SUBLEVEL=${{ env.SUBLEVEL }}
-        SUSFS_VERSION=${{ env.SUSFS_VERSION }}
-
-        if [[ "$SUBLEVEL" -le 92 ]]; then
-          cp ${{ github.workspace }}/kernel_patches/wild/susfs_fix_patches/${SUSFS_VERSION}/a15-6.6/base.c.patch ./
-          patch -p1 < base.c.patch
-        fi
-
-        if [[ "$SUBLEVEL" -le 58 ]]; then
-          cp ${{ github.workspace }}/kernel_patches/wild/susfs_fix_patches/${SUSFS_VERSION}/a15-6.6/task_mmu.c.patch ./
-          patch -p1 < task_mmu.c.patch
-        fi

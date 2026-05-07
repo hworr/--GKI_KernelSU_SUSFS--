@@ -51,8 +51,8 @@ runs:
         echo CCACHE_MAXSIZE="$CCACHE_MAXSIZE" >> $GITHUB_ENV
         export CCACHE_COMPILERCHECK="%compiler% -dumpmachine; %compiler% -dumpversion"
         echo CCACHE_COMPILERCHECK="$CCACHE_COMPILERCHECK" >> $GITHUB_ENV
-        export CCACHE_BASEDIR="${GITHUB_WORKSPACE}"
-        echo CCACHE_BASEDIR="${GITHUB_WORKSPACE}" >> $GITHUB_ENV
+        export CCACHE_BASEDIR="${{ github.workspace }}"
+        echo CCACHE_BASEDIR="${{ github.workspace }}" >> $GITHUB_ENV
         export CCACHE_NOHASHDIR="true"
         echo CCACHE_NOHASHDIR="true" >> $GITHUB_ENV
         export CCACHE_IGNOREOPTIONS="--sysroot*"
@@ -119,15 +119,15 @@ runs:
         mkdir -p "$LDCACHE_DIR"
           
         # Create LD wrapper for thin-LTO caching
-        cat > "$GITHUB_WORKSPACE/kernel/common/ld-wrapper" << 'EOF'
+        cat > "${{ github.workspace }}/kernel/common/ld-wrapper" << 'EOF'
         #!/bin/bash
         ld.lld "$@" --thinlto-cache-dir="$LDCACHE_DIR" --thinlto-jobs="$(nproc --all)"
         EOF
-        chmod +x "$GITHUB_WORKSPACE/kernel/common/ld-wrapper"
+        chmod +x "${{ github.workspace }}/kernel/common/ld-wrapper"
 
         # Setup cache directories
-        echo "LD=$GITHUB_WORKSPACE/kernel/common/ld-wrapper" >> "$GITHUB_ENV"
-        echo "HOSTLD=$GITHUB_WORKSPACE/kernel/common/ld-wrapper" >> "$GITHUB_ENV"
+        echo "LD=${{ github.workspace }}/kernel/common/ld-wrapper" >> "$GITHUB_ENV"
+        echo "HOSTLD=${{ github.workspace }}/kernel/common/ld-wrapper" >> "$GITHUB_ENV"
 
         echo "✅ LD Cache ready"
         echo "LDCACHE_DIR: $LDCACHE_DIR"

@@ -63,7 +63,7 @@ runs:
         echo "[INFO] Checking for android15 + kernel 6.6 include fix..."
         if [[ "${{ inputs.android_version }}" == "android15" && "${{ inputs.kernel_version }}" == "6.6" ]]; then
           echo "[MATCH] android15 + 6.6, checking for fs.h include."
-          cd "$GITHUB_WORKSPACE/kernel/common"
+          cd "${{ github.workspace }}/kernel/common"
           if ! grep -qxF '#include <trace/hooks/fs.h>' ./fs/namespace.c; then
             echo "[INFO] Adding missing #include <trace/hooks/fs.h> to fs/namespace.c."
             sed -i '/#include <trace\/hooks\/blk.h>/a #include <trace\/hooks\/fs.h>' ./fs/namespace.c

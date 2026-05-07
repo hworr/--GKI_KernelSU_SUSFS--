@@ -19,8 +19,8 @@ runs:
         set -euo pipefail
 
         SUBLEVEL="${SUB_LEVEL}"
-        if [ -f "$GITHUB_WORKSPACE/kernel/common/Makefile" ]; then
-          EXTRACTED="$(grep '^SUBLEVEL = ' "$GITHUB_WORKSPACE/kernel/common/Makefile" | awk '{print $3}')"
+        if [ -f "${{ github.workspace }}/kernel/common/Makefile" ]; then
+          EXTRACTED="$(grep '^SUBLEVEL = ' "${{ github.workspace }}/kernel/common/Makefile" | awk '{print $3}')"
           if [ -n "$EXTRACTED" ]; then SUBLEVEL="$EXTRACTED"; fi
         fi
 

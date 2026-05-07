@@ -12,8 +12,8 @@ runs:
       run: |
         set -euo pipefail
 
-        CONFIG_DIR="$GITHUB_WORKSPACE/kernel"
-        REJECTS_DIR="$GITHUB_WORKSPACE/patch-rejects"
+        CONFIG_DIR="${{ github.workspace }}/kernel"
+        REJECTS_DIR="${{ github.workspace }}/patch-rejects"
         mkdir -p "$REJECTS_DIR"
         mapfile -t REJS < <(find "$CONFIG_DIR" -type f -name '*.rej')
         REJ_COUNT=${#REJS[@]}

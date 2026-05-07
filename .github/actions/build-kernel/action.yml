@@ -15,7 +15,7 @@ runs:
         SKIP_CP_KERNEL_HDR=1 \
         SKIP_MRPROPER=1 \
         LTO=thin \
-        GKI_DEFCONFIG_FRAGMENT="$GITHUB_WORKSPACE/wild_gki.fragment" \
+        GKI_DEFCONFIG_FRAGMENT="${{ github.workspace }}/wild_gki.fragment" \
         BUILD_CONFIG=common/build.config.gki.aarch64 \
         build/build.sh -j"$(nproc)" \
         CC="$CC" \
@@ -25,7 +25,7 @@ runs:
         LD="$LD" \
         HOSTLD="$HOSTLD"
       else
-        cp "$GITHUB_WORKSPACE/wild_gki.fragment" common/arch/arm64/configs/wild_gki.fragment
+        cp "${{ github.workspace }}/wild_gki.fragment" common/arch/arm64/configs/wild_gki.fragment
         tools/bazel build \
           --linkopt="--thinlto-cache-dir=/home/runner/.ld_cache" \
           --config=fast \

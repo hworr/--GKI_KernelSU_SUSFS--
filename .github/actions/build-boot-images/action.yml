@@ -12,17 +12,17 @@ runs:
         mkdir -p bootimgs
         mkdir -p boot-artifacts
 
-        if [ -f "$GITHUB_WORKSPACE/kernel/out/$ANDROID_VERSION-$KERNEL_VERSION/dist/Image" ]; then
-          cp "$GITHUB_WORKSPACE/kernel/out/$ANDROID_VERSION-$KERNEL_VERSION/dist/Image" "$GITHUB_WORKSPACE/bootimgs/Image"
-          cp "$GITHUB_WORKSPACE/kernel/out/$ANDROID_VERSION-$KERNEL_VERSION/dist/Image.lz4" "$GITHUB_WORKSPACE/bootimgs/Image.lz4"
+        if [ -f "${{ github.workspace }}/kernel/out/$ANDROID_VERSION-$KERNEL_VERSION/dist/Image" ]; then
+          cp "${{ github.workspace }}/kernel/out/$ANDROID_VERSION-$KERNEL_VERSION/dist/Image" "${{ github.workspace }}/bootimgs/Image"
+          cp "${{ github.workspace }}/kernel/out/$ANDROID_VERSION-$KERNEL_VERSION/dist/Image.lz4" "${{ github.workspace }}/bootimgs/Image.lz4"
         else
-          cp "$GITHUB_WORKSPACE/kernel/bazel-bin/common/kernel_aarch64/Image" "$GITHUB_WORKSPACE/bootimgs/Image"
-          cp "$GITHUB_WORKSPACE/kernel/bazel-bin/common/kernel_aarch64/Image.lz4" "$GITHUB_WORKSPACE/bootimgs/Image.lz4"
+          cp "${{ github.workspace }}/kernel/bazel-bin/common/kernel_aarch64/Image" "${{ github.workspace }}/bootimgs/Image"
+          cp "${{ github.workspace }}/kernel/bazel-bin/common/kernel_aarch64/Image.lz4" "${{ github.workspace }}/bootimgs/Image.lz4"
         fi
 
-        gzip -n -k -f -9 "$GITHUB_WORKSPACE/bootimgs/Image" > "$GITHUB_WORKSPACE/bootimgs/Image.gz"
+        gzip -n -k -f -9 "${{ github.workspace }}/bootimgs/Image" > "${{ github.workspace }}/bootimgs/Image.gz"
 
-        cd "$GITHUB_WORKSPACE/bootimgs"
+        cd "${{ github.workspace }}/bootimgs"
 
         case "$ANDROID_VERSION" in
           android12)
@@ -67,5 +67,5 @@ runs:
           fi
 
           "$AVBTOOL" add_hash_footer --partition_name boot --partition_size $((64 * 1024 * 1024)) --image "$output_image" --algorithm SHA256_RSA2048 --key "$BOOT_SIGN_KEY_PATH"
-          cp "$output_image" "$GITHUB_WORKSPACE/boot-artifacts/${FILE_NAME}-${output_image}"
+          cp "$output_image" "${{ github.workspace }}/boot-artifacts/${FILE_NAME}-${output_image}"
         done

@@ -47,7 +47,7 @@ runs:
         if [ "${{ inputs.kernel_version }}" = "6.12" ]; then
           SUSFS_COMMIT="5c34dec2c3b69af1d72ac4a89b179741fc602a79"
         fi
-        cd $GITHUB_WORKSPACE/susfs4ksu
+        cd ${{ github.workspace }}/susfs4ksu
         git checkout "$SUSFS_COMMIT"
 
     - name: Enable KernelSU SUSFS Config
@@ -162,8 +162,8 @@ runs:
         #fi
         if [ "${{ inputs.sublevel }}" -le "58" ]; then
           echo "Applying task_mmu.c Android 15 6.6 Fake Patch"
-          sed -i "/int ret.*= 0, copied.*= 0;/a \\		unsigned int nr_subpages = __PAGE_SIZE / PAGE_SIZE;" fs/proc/task_mmu.c
-          sed -i "/unsigned int nr_subpages = __PAGE_SIZE \\/ PAGE_SIZE;/a \\		pagemap_entry_t *res = NULL;" fs/proc/task_mmu.c
+          sed -i "/int ret.*= 0, copied.*= 0;/a \\	unsigned int nr_subpages = __PAGE_SIZE / PAGE_SIZE;" fs/proc/task_mmu.c
+          sed -i "/unsigned int nr_subpages = __PAGE_SIZE \\/ PAGE_SIZE;/a \\	pagemap_entry_t *res = NULL;" fs/proc/task_mmu.c
         fi
         cat fs/proc/task_mmu.c
         if [ "${{ inputs.sublevel }}" -le "92" ]; then

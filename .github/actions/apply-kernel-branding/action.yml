@@ -21,10 +21,10 @@ runs:
       shell: bash
       working-directory: ${{ github.workspace }}/kernel/common
       run: |
-        CONFIG_FRAGMENT="${GITHUB_WORKSPACE}/wild_gki.fragment"
+        CONFIG_FRAGMENT="${{ github.workspace }}/wild_gki.fragment"
         touch "$CONFIG_FRAGMENT"
 
-        DEFCONFIG="${GITHUB_WORKSPACE}/kernel/common/arch/arm64/configs/gki_defconfig"
+        DEFCONFIG="${{ github.workspace }}/kernel/common/arch/arm64/configs/gki_defconfig"
 
         if [ "${{ inputs.variant }}" == "Wild" ]; then
           tac scripts/setlocalversion | awk '!seen && /^echo / {seen=1; next} 1' | tac > scripts/setlocalversion.tmp
