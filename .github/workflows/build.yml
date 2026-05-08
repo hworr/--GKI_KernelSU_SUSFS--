@@ -97,7 +97,7 @@ jobs:
         sublevel: ${{ steps.extract.outputs.sublevel }}
 
     - name: Baseband Guard
-      if: contains(inputs.feature_set, 'BBG') || inputs.feature_set == 'FULL'
+      if: (contains(inputs.feature_set, 'BBG') || inputs.feature_set == 'FULL') && false
       uses: ./.github/actions/bbg
 
     - name: Setup Networking
