@@ -118,6 +118,7 @@ jobs:
       with:
         kernel_version: ${{ steps.parse.outputs.kernel_version }}
         android_version: ${{ steps.parse.outputs.android_version }}
+        sublevel: ${{ steps.extract.outputs.sublevel }}
 
     - name: Apply Module Check Bypass
       if: ${{ inputs.variant == 'Bypass' }}
