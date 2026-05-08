@@ -36,6 +36,6 @@ runs:
         set -euo pipefail
         echo "Add Build based configs"
         cat >> "${{ github.workspace }}/wild_gki.fragment" << 'EOF'
-        #CONFIG_ANDROID_BINDER_IPC_RUST is not set
+        # CONFIG_ANDROID_BINDER_IPC_RUST is not set
         CONFIG_ANDROID_BINDER_IPC_RUST_DUMMY=m
         EOF
