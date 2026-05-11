@@ -20,33 +20,17 @@ runs:
     - name: Setup SUSFS Branch
       shell: bash
       run: |
+        set -euo pipefail
+
         SUSFS_BRANCH="gki-${{ inputs.android_version }}-${{ inputs.kernel_version }}"
         SUSFS_REPO="https://gitlab.com/simonpunk/susfs4ksu.git"        
+        COMMITS_JSON="${{ github.workspace }}/.github/config/commits.json"
+
         echo "Preparing SUSFS for branch: $SUSFS_BRANCH"
         echo "Cloning latest from $SUSFS_BRANCH..."
         git clone "$SUSFS_REPO" -b "$SUSFS_BRANCH" susfs4ksu
 
-        if [ "${{ inputs.kernel_version }}" = "5.10" ] && [ "${{ inputs.android_version }}" = "android12" ]; then
-          SUSFS_COMMIT="e1681bc4d6fa90203a1fd86f26a8583baa4433dc"
-        fi
-        if [ "${{ inputs.kernel_version }}" = "5.10" ] && [ "${{ inputs.android_version }}" = "android13" ]; then
-          SUSFS_COMMIT="6a47d9a4717a4d72244f4ec7197a69596f029730"
-        fi
-        if [ "${{ inputs.kernel_version }}" = "5.15" ] && [ "${{ inputs.android_version }}" = "android13" ]; then
-          SUSFS_COMMIT="349ed52eea1be5c9590289a76a90d78710d4bba0"
-        fi
-        if [ "${{ inputs.kernel_version }}" = "5.15" ] && [ "${{ inputs.android_version }}" = "android14" ]; then
-          SUSFS_COMMIT="16a22b6a608b3f124c64f70829657871eee3af37"
-        fi
-        if [ "${{ inputs.kernel_version }}" = "6.1" ]; then
-          SUSFS_COMMIT="ef16cbce5c5195988b9b630de85466148cbbcdef"
-        fi
-        if [ "${{ inputs.kernel_version }}" = "6.6" ]; then
-          SUSFS_COMMIT="de8d8ca1478dd58afd3b7a119a0ce2d55d0080cf"
-        fi
-        if [ "${{ inputs.kernel_version }}" = "6.12" ]; then
-          SUSFS_COMMIT="fd03bb9c3cb4ee07b16806e0528e06486ab1be2b"
-        fi
+        SUSFS_COMMIT=$(jq -er --arg key "$SUSFS_BRANCH" '.susfs[$key]' "$COMMITS_JSON")
         cd ${{ github.workspace }}/susfs4ksu
         git checkout "$SUSFS_COMMIT"
 
