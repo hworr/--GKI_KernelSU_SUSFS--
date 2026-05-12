@@ -274,6 +274,11 @@ jobs:
 
     - name: Create Bootimgs Folder and Build Boot Images
       uses: ./.github/actions/build-boot-images
+      with:
+        android_version: ${{ inputs.android_version }}
+        kernel_version: ${{ inputs.kernel_version }}
+        os_patch_level: ${{ inputs.os_patch_level }}
+        file_name: ${{ steps.extract.outputs.file_name }}
 
     - name: Upload Boot Image (boot.img)
       uses: actions/upload-artifact@v7
