@@ -125,16 +125,19 @@ runs:
         echo "LDCACHE_DIR=$LDCACHE_DIR" >> $GITHUB_ENV
         mkdir -p "$LDCACHE_DIR"
           
-        # Create LD wrapper for thin-LTO caching with 4GB size limit
+        # Create LD wrapper for thin-LTO caching
         cat > "${{ github.workspace }}/kernel/common/ld-wrapper" << 'EOF'
         #!/bin/bash
-        ld.lld "$@" --thinlto-cache-dir="$LDCACHE_DIR" --thinlto-cache-max-size=4294967296 --thinlto-jobs="$(nproc --all)"
+        ld.lld "$@" --thinlto-cache-dir="$LDCACHE_DIR" --thinlto-jobs="$(nproc --all)"
         EOF
         chmod +x "${{ github.workspace }}/kernel/common/ld-wrapper"
 
         # Setup cache directories
         echo "LD=${{ github.workspace }}/kernel/common/ld-wrapper" >> "$GITHUB_ENV"
         echo "HOSTLD=${{ github.workspace }}/kernel/common/ld-wrapper" >> "$GITHUB_ENV"
+        
+        # Set size limit via environment (4GB)
+        echo "LDCACHE_MAX_SIZE=4294967296" >> "$GITHUB_ENV"
 
         echo "✅ LD Cache ready (max 4GB)"
         echo "LDCACHE_DIR: $LDCACHE_DIR"
