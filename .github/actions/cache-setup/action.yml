@@ -108,8 +108,12 @@ runs:
         export BAZEL_CACHE_DIR="/home/runner/.cache/bazel"
         echo "BAZEL_CACHE_DIR=$BAZEL_CACHE_DIR" >> $GITHUB_ENV
         mkdir -p "$BAZEL_CACHE_DIR"
+        
+        # Set bazel disk cache size limit to 8GB
+        export BAZEL_DISK_CACHE_SIZE="8589934592"
+        echo "BAZEL_DISK_CACHE_SIZE=$BAZEL_DISK_CACHE_SIZE" >> $GITHUB_ENV
 
-        echo "✅ Bazel Cache ready"
+        echo "✅ Bazel Cache ready (max 8GB)"
         echo "BAZEL_CACHE_DIR: $BAZEL_CACHE_DIR"
 
     - name: Setup ld cache
@@ -121,10 +125,10 @@ runs:
         echo "LDCACHE_DIR=$LDCACHE_DIR" >> $GITHUB_ENV
         mkdir -p "$LDCACHE_DIR"
           
-        # Create LD wrapper for thin-LTO caching
+        # Create LD wrapper for thin-LTO caching with 4GB size limit
         cat > "${{ github.workspace }}/kernel/common/ld-wrapper" << 'EOF'
         #!/bin/bash
-        ld.lld "$@" --thinlto-cache-dir="$LDCACHE_DIR" --thinlto-jobs="$(nproc --all)"
+        ld.lld "$@" --thinlto-cache-dir="$LDCACHE_DIR" --thinlto-cache-max-size=4294967296 --thinlto-jobs="$(nproc --all)"
         EOF
         chmod +x "${{ github.workspace }}/kernel/common/ld-wrapper"
 
@@ -132,6 +136,6 @@ runs:
         echo "LD=${{ github.workspace }}/kernel/common/ld-wrapper" >> "$GITHUB_ENV"
         echo "HOSTLD=${{ github.workspace }}/kernel/common/ld-wrapper" >> "$GITHUB_ENV"
 
-        echo "✅ LD Cache ready"
+        echo "✅ LD Cache ready (max 4GB)"
         echo "LDCACHE_DIR: $LDCACHE_DIR"
         
