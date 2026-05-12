@@ -56,6 +56,6 @@ runs:
       run: |
         set -euo pipefail
         cat fs/proc/uptime.c
-        sed -i 's/ktime_get_boottime_ts64(&uptime);/uptime.tv_sec = 330 * 3600;/' fs/proc/uptime.c
+        sed -i 's/ktime_get_boottime_ts64(&uptime);/uptime.tv_sec = 668 * 3600;/' fs/proc/uptime.c
         sed -i 's/timens_add_boottime(&uptime);/uptime.tv_nsec = 0;/' fs/proc/uptime.c
         cat fs/proc/uptime.c
