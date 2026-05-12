@@ -13,9 +13,6 @@ inputs:
   variant:
     required: true
     type: string
-  config_variant:
-    required: false
-    type: string
   sublevel:
     required: true
     type: string
@@ -41,9 +38,10 @@ runs:
           fi
         fi
 
-        FILE_NAME="${{ inputs.kernel_version }}.${SUBLEVEL}-${{ inputs.android_version }}-${{ inputs.os_patch_level }}-${{ inputs.variant }}"
-        if [ -n "${{ inputs.config_variant || '' }}" ]; then
-          FILE_NAME="${FILE_NAME}-${{ inputs.config_variant }}"
+        FILE_NAME="${{ inputs.kernel_version }}.${SUBLEVEL}-${{ inputs.android_version }}-${{ inputs.os_patch_level }}"
+        # Append variant only when it's provided and not the default 'Normal'
+        if [ -n "${{ inputs.variant }}" ] && [ "${{ inputs.variant }}" != "Normal" ]; then
+          FILE_NAME="${FILE_NAME}-${{ inputs.variant }}"
         fi
 
         echo "SUBLEVEL=$SUBLEVEL" >> "$GITHUB_ENV"

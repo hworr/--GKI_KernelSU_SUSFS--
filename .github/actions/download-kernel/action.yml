@@ -8,6 +8,9 @@ inputs:
   kernel_version:
     description: 'Kernel version (e.g., 5.15, 6.1)'
     required: true
+  version:
+    description: 'Combined version (e.g., android14-6.1)'
+    required: true
   os_patch_level:
     description: 'OS patch level (e.g., 2024-01)'
     required: true
@@ -31,7 +34,11 @@ runs:
       run: |
         set -euo pipefail
 
-        FORMATTED_BRANCH="${{ inputs.android_version }}-${{ inputs.kernel_version }}-${{ inputs.os_patch_level }}"
+        # Derive android and kernel from combined version when available
+        VERSION="${{ inputs.version }}"
+        ANDROID_PART=$(echo "$VERSION" | cut -d- -f1)
+        KERNEL_PART=$(echo "$VERSION" | cut -d- -f2)
+        FORMATTED_BRANCH="${ANDROID_PART}-${KERNEL_PART}-${{ inputs.os_patch_level }}"
 
         init_repo() {
           repo init -u https://android.googlesource.com/kernel/manifest -b common-${FORMATTED_BRANCH} --depth=1 || { echo "ERROR: repo init failed" >&2; return 1; }
@@ -84,7 +91,10 @@ runs:
       working-directory: ${{ github.workspace }}/kernel
       run: |
         set -euo pipefail
-        FORMATTED_BRANCH="${{ inputs.android_version }}-${{ inputs.kernel_version }}-${{ inputs.os_patch_level }}"
+        VERSION="${{ inputs.version }}"
+        ANDROID_PART=$(echo "$VERSION" | cut -d- -f1)
+        KERNEL_PART=$(echo "$VERSION" | cut -d- -f2)
+        FORMATTED_BRANCH="${ANDROID_PART}-${KERNEL_PART}-${{ inputs.os_patch_level }}"
         MAIN_MANIFEST_URL="https://android.googlesource.com/kernel/manifest/+/refs/heads/common-${FORMATTED_BRANCH}/default.xml?format=TEXT"
         DEPRECATED_MANIFEST_URL="https://android.googlesource.com/kernel/manifest/+/refs/heads/deprecated/common-${FORMATTED_BRANCH}/default.xml?format=TEXT"
         echo "Trying to fetch manifest from $MAIN_MANIFEST_URL"

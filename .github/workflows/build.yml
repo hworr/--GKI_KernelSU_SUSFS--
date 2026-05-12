@@ -6,6 +6,9 @@ permissions:
 on:
   workflow_call:
     inputs:
+      version:
+        required: true
+        type: string
       android_version:
         required: true
         type: string
@@ -21,9 +24,6 @@ on:
       variant:
         required: false
         type: string
-      config_variant:
-        required: false
-        type: string
       feature_set:
         required: true
         type: string
@@ -33,7 +33,7 @@ on:
 
 jobs:
   build-gki:
-    name: "${{ inputs.android_version }}-${{ inputs.kernel_version }}.${{ inputs.sublevel }}-${{ inputs.os_patch_level }} (${{ inputs.variant }} / ${{ inputs.config_variant || 'base' }})"
+    name: "${{ inputs.kernel_version }}.${{ inputs.sublevel }}-${{ inputs.android_version }}-${{ inputs.os_patch_level }} (${{ inputs.variant }})"
     runs-on: ubuntu-latest
     timeout-minutes: 60
 
@@ -70,6 +70,7 @@ jobs:
     - name: Download Kernel Repository
       uses: ./.github/actions/download-kernel
       with:
+        version: ${{ inputs.version }}
         android_version: ${{ inputs.android_version }}
         kernel_version: ${{ inputs.kernel_version }}
         os_patch_level: ${{ inputs.os_patch_level }}
@@ -84,11 +85,11 @@ jobs:
         sublevel: ${{ inputs.sublevel }}
         os_patch_level: ${{ inputs.os_patch_level }}
         variant: ${{ inputs.variant }}
-        config_variant: ${{ inputs.config_variant }}
 
     - name: Kernel Fixes
       uses: ./.github/actions/kernel-fixes
       with:
+        version: ${{ inputs.version }}
         android_version: ${{ inputs.android_version }}
         kernel_version: ${{ inputs.kernel_version }}
         sublevel: ${{ steps.extract.outputs.sublevel }}
@@ -102,6 +103,7 @@ jobs:
       if: contains(inputs.feature_set, 'SUSFS') || inputs.feature_set == 'FULL'
       uses: ./.github/actions/susfs
       with:
+        version: ${{ inputs.version }}
         android_version: ${{ inputs.android_version }}
         kernel_version: ${{ inputs.kernel_version }}
         os_patch_level: ${{ inputs.os_patch_level }}
@@ -122,15 +124,17 @@ jobs:
       if: contains(inputs.feature_set, 'DS') || inputs.feature_set == 'FULL'
       uses: ./.github/actions/droidspaces
       with:
+        version: ${{ inputs.version }}
         kernel_version: ${{ inputs.kernel_version }}
 
     - name: Setup Misc Configs
       uses: ./.github/actions/misc
       with:
+        version: ${{ inputs.version }}
         kernel_version: ${{ inputs.kernel_version }}
         android_version: ${{ inputs.android_version }}
         sublevel: ${{ steps.extract.outputs.sublevel }}
-        config_variant: ${{ inputs.config_variant }}
+        variant: ${{ inputs.variant }}
 
     - name: Apply Module Check Bypass
       if: ${{ inputs.variant == 'Bypass' }}
@@ -141,6 +145,7 @@ jobs:
     - name: Apply Device-Specific Patches
       uses: ./.github/actions/apply-device-patches
       with:
+        version: ${{ inputs.version }}
         kernel_version: ${{ inputs.kernel_version }}
 
     - name: Apply ABI Compare Bypass
@@ -194,8 +199,9 @@ jobs:
     - name: 'Setup Cache and Build Environment'
       uses: ./.github/actions/cache-setup
       with:
-        android_version: ${{ steps.parse.outputs.android_version }}
-        kernel_version: ${{ steps.parse.outputs.kernel_version }}
+        version: ${{ inputs.version }}
+        android_version: ${{ inputs.android_version }}
+        kernel_version: ${{ inputs.kernel_version }}
         sublevel: ${{ steps.extract.outputs.sublevel }}
 
     - name: Restore build caches (ccache, bazel, bazel-disk, lto)

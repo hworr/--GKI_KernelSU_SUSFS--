@@ -1,6 +1,9 @@
 name: 'Setup Misc Configs'
 description: 'Set up kernel configuration fragment with miscellaneous options'
 inputs:
+  version:
+    description: 'Kernel config version (e.g., android14-6.12)'
+    required: true
   kernel_version:
     description: 'Kernel version (e.g., 6.1)'
     required: true
@@ -10,9 +13,9 @@ inputs:
   sublevel:
     description: 'Sublevel of kernel version (e.g., 1)'
     required: true
-  config_variant:
-    description: 'Optional config variant for extra edits'
-    required: false
+  variant:
+    description: 'Build variant (Normal, Bypass, Wild, boot-time)'
+    required: true
 
 runs:
   using: "composite"
@@ -37,7 +40,7 @@ runs:
 
     - name: Add RUST build configs
       shell: bash
-      if: ${{ inputs.kernel_version == '6.12' && inputs.android_version == 'android16' && inputs.sublevel <= '38' }}
+      if: ${{ inputs.version == 'android16-6.12' && inputs.sublevel <= '38' }}
       run: |
         set -euo pipefail
         echo "Add Build based configs"
@@ -48,7 +51,7 @@ runs:
 
     - name: Add boot time build configs
       shell: bash
-      if: ${{ inputs.config_variant == 'boot-time' }}
+      if: ${{ inputs.variant == 'boot-time' }}
       working-directory: ${{ github.workspace }}/kernel/common
       run: |
         set -euo pipefail

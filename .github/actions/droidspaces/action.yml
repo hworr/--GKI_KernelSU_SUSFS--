@@ -1,6 +1,9 @@
 name: Setup Droidspaces-OSS
 description: Clone and apply Droidspaces-OSS patches with version-specific fixes
 inputs:
+  version:
+    description: 'Kernel config version (e.g., android15-6.6)'
+    required: true
   android_version:
     description: 'Android version (e.g., android15)'
     required: true
@@ -27,18 +30,18 @@ runs:
       shell: bash
       working-directory: ${{ github.workspace }}/kernel/common
       run: |
-        if [ "${{ inputs.kernel_version }}" == "6.12" ]; then
+        if [ "${{ inputs.version }}" == "android16-6.12" ]; then
           cp ${{ github.workspace }}/Droidspaces-OSS/Documentation/resources/kernel-patches/GKI/kernel-6.12/001.GKI-6.12-or-above-fix_sysvipc_kabi.patch ./
           patch -p1 < 001.GKI-6.12-or-above-fix_sysvipc_kabi.patch
-        elif [ "${{ inputs.kernel_version }}" == "6.6" ] || [ "${{ inputs.kernel_version }}" == "6.1" ]; then
+        elif [ "${{ inputs.version }}" == "android15-6.6" ] || [ "${{ inputs.version }}" == "android14-6.1" ]; then
           #curl -L https://raw.githubusercontent.com/ravindu644/Droidspaces-OSS/main/Documentation/resources/kernel-patches/GKI/below-kernel-6.12/001.GKI-below-6.12-fix_sysvipc_kabi_1_2_3.patch
           #curl -L https://raw.githubusercontent.com/ravindu644/Droidspaces-OSS/main/Documentation/resources/kernel-patches/GKI/below-kernel-6.12/001.GKI-below-6.12-fix_sysvipc_kabi_3_4_5.patch
           cp ${{ github.workspace }}/Droidspaces-OSS/Documentation/resources/kernel-patches/GKI/below-kernel-6.12/001.GKI-below-6.12-fix_sysvipc_kabi_6_7_8.patch ./
           patch -p1 < 001.GKI-below-6.12-fix_sysvipc_kabi_6_7_8.patch
-        elif [ "${{ inputs.kernel_version }}" == "5.15" ]; then
+        elif [ "${{ inputs.version }}" == "android14-5.15" ]; then
           cp ${{ github.workspace }}/Droidspaces-OSS/Documentation/resources/kernel-patches/GKI/below-kernel-6.12/001.GKI-below-6.12-fix_sysvipc_kabi_6_7_8.patch ./
           patch -p1 < 001.GKI-below-6.12-fix_sysvipc_kabi_6_7_8.patch
-        elif [ "${{ inputs.kernel_version }}" == "5.10" ]; then
+        elif [ "${{ inputs.version }}" == "android12-5.10" ] || [ "${{ inputs.version }}" == "android13-5.10" ] || [ "${{ inputs.version }}" == "android13-5.15" ]; then
           cp ${{ github.workspace }}/Droidspaces-OSS/Documentation/resources/kernel-patches/GKI/below-kernel-6.12/001.GKI-below-6.12-fix_sysvipc_kabi_6_7_8.patch ./
           patch -p1 < 001.GKI-below-6.12-fix_sysvipc_kabi_6_7_8.patch
           cp ${{ github.workspace }}/Droidspaces-OSS/Documentation/resources/kernel-patches/GKI/below-kernel-6.12/002.5.10_or_lower_use_android_abi_padding_for_posix_mqueue.patch ./
@@ -59,7 +62,7 @@ runs:
 
     - name: Fix 5.10
       shell: bash
-      if: inputs.kernel_version == '5.10' && inputs.android_version == 'android12'
+      if: inputs.version == 'android12-5.10'
       working-directory: ${{ github.workspace }}/kernel
       run: |
         sed -i '/#ifdef CONFIG_PID_NS/,/#else/s/static inline struct pid_namespace \*get_pid_ns(struct pid_namespace \*ns)/extern struct pid_namespace *get_pid_ns(struct pid_namespace *ns);/' common/include/linux/pid_namespace.h

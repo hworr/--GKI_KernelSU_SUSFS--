@@ -1,6 +1,9 @@
 name: Setup SUSFS
 description: Clone and apply SUSFS patches with version-specific fixes
 inputs:
+  version:
+    description: 'Kernel config version (e.g., android15-6.6)'
+    required: true
   android_version:
     description: 'Android version (e.g., android15)'
     required: true
@@ -22,7 +25,7 @@ runs:
       run: |
         set -euo pipefail
 
-        SUSFS_BRANCH="gki-${{ inputs.android_version }}-${{ inputs.kernel_version }}"
+        SUSFS_BRANCH="gki-${{ inputs.version }}"
         SUSFS_REPO="https://gitlab.com/simonpunk/susfs4ksu.git"        
         COMMITS_JSON="${{ github.workspace }}/.github/config/commits.json"
 
@@ -66,11 +69,11 @@ runs:
         # Apply base SUSFS patches
         cp "${{ github.workspace }}/susfs4ksu/kernel_patches/fs/"* "${{ github.workspace }}/kernel/common/fs/"
         cp "${{ github.workspace }}/susfs4ksu/kernel_patches/include/linux/"* "${{ github.workspace }}/kernel/common/include/linux/"
-        cp ${{ github.workspace }}/susfs4ksu/kernel_patches/50_add_susfs_in_gki-${{ inputs.android_version }}-${{ inputs.kernel_version }}.patch ./
+        cp ${{ github.workspace }}/susfs4ksu/kernel_patches/50_add_susfs_in_gki-${{ inputs.version }}.patch ./
 
     - name: Apply Android 12 5.10 Fake Patches
       shell: bash
-      if: inputs.kernel_version == '5.10' && inputs.android_version == 'android12'
+      if: inputs.version == 'android12-5.10'
       working-directory: ${{ github.workspace }}/kernel/common
       run: |
         if [ "${{ inputs.sublevel }}" -le "43" ]; then
@@ -86,7 +89,7 @@ runs:
 
     - name: Apply Android 13 5.10 Fake Patches
       shell: bash
-      if: inputs.kernel_version == '5.10' && inputs.android_version == 'android13'
+      if: inputs.version == 'android13-5.10'
       working-directory: ${{ github.workspace }}/kernel/common
       run: |
         echo "Applying Android 13 5.10 SUSFS fixes"
@@ -99,7 +102,7 @@ runs:
 
     - name: Apply Android 13 5.15 Fake Patches
       shell: bash
-      if: inputs.kernel_version == '5.15' && inputs.android_version == 'android13'
+      if: inputs.version == 'android13-5.15'
       working-directory: ${{ github.workspace }}/kernel/common
       run: |
         echo "Applying Android 13 5.15 SUSFS fixes"
@@ -118,7 +121,7 @@ runs:
 
     - name: Apply Android 14 6.1 Fake Patches
       shell: bash
-      if: inputs.kernel_version == '6.1' && inputs.android_version == 'android14'
+      if: inputs.version == 'android14-6.1'
       working-directory: ${{ github.workspace }}/kernel/common
       run: |
         if [ "${{ inputs.sublevel }}" -le "25" ]; then
@@ -136,7 +139,7 @@ runs:
 
     - name: Apply Android 15 6.6 Fake Patches
       shell: bash
-      if: inputs.kernel_version == '6.6' && inputs.android_version == 'android15'
+      if: inputs.version == 'android15-6.6'
       working-directory: ${{ github.workspace }}/kernel/common
       run: |
         echo "Applying 6.6 SUSFS fixes"
@@ -157,7 +160,7 @@ runs:
 
     - name: Apply Android 16 6.12 Fake Patches
       shell: bash
-      if: inputs.kernel_version == '6.12' && inputs.android_version == 'android16'
+      if: inputs.version == 'android16-6.12'
       working-directory: ${{ github.workspace }}/kernel/common
       run: |
         echo "Applying 6.12 SUSFS fixes"
@@ -174,11 +177,11 @@ runs:
       shell: bash
       working-directory: ${{ github.workspace }}/kernel/common
       run: |
-        patch -p1 < 50_add_susfs_in_gki-${{ inputs.android_version }}-${{ inputs.kernel_version }}.patch || true
+        patch -p1 < 50_add_susfs_in_gki-${{ inputs.version }}.patch || true
 
     - name: Revert Android 12 5.10 Fake Patches
       shell: bash
-      if: inputs.kernel_version == '5.10' && inputs.android_version == 'android12'
+      if: inputs.version == 'android12-5.10'
       working-directory: ${{ github.workspace }}/kernel/common
       run: |
         if [ "${{ inputs.sublevel }}" -le "43" ]; then
@@ -194,7 +197,7 @@ runs:
 
     - name: Revert Android 13 5.10 Fake Patches
       shell: bash
-      if: inputs.kernel_version == '5.10' && inputs.android_version == 'android13'
+      if: inputs.version == 'android13-5.10'
       working-directory: ${{ github.workspace }}/kernel/common
       run: |
         if [ "${{ inputs.sublevel }}" -le "107" ]; then
@@ -206,7 +209,7 @@ runs:
 
     - name: Revert Android 13 5.15 Fake Patches
       shell: bash
-      if: inputs.kernel_version == '5.15' && inputs.android_version == 'android13'
+      if: inputs.version == 'android13-5.15'
       working-directory: ${{ github.workspace }}/kernel/common
       run: |
         if [ "${{ inputs.sublevel }}" -le "41" ]; then
@@ -226,7 +229,7 @@ runs:
 
     - name: Revert Android 14 6.1 Fake Patches
       shell: bash
-      if: inputs.kernel_version == '6.1' && inputs.android_version == 'android14'
+      if: inputs.version == 'android14-6.1'
       working-directory: ${{ github.workspace }}/kernel/common
       run: |
         if [ "${{ inputs.sublevel }}" -le "25" ]; then
@@ -243,7 +246,7 @@ runs:
 
     - name: Revert Android 15 6.6 Fake Patches
       shell: bash
-      if: inputs.kernel_version == '6.6' && inputs.android_version == 'android15'
+      if: inputs.version == 'android15-6.6'
       working-directory: ${{ github.workspace }}/kernel/common
       run: |
         echo "Reverting 6.6 Fake Patches"
@@ -259,7 +262,7 @@ runs:
 
     - name: Revert Android 16 6.12 Fake Patches
       shell: bash
-      if: inputs.kernel_version == '6.12' && inputs.android_version == 'android16'
+      if: inputs.version == 'android16-6.12'
       working-directory: ${{ github.workspace }}/kernel/common
       run: |
         echo "Reverting 6.12 Fake Patches"
@@ -278,15 +281,15 @@ runs:
       working-directory: ${{ github.workspace }}/kernel/common
       run: |
         SHOW_PAD_FIX=0
-        if [[ "${{ inputs.android_version }}" = "android12" && "${{ inputs.kernel_version }}" = "5.10" && "${{ inputs.sublevel }}" -le 209 ]]; then
+        if [[ "${{ inputs.version }}" = "android12-5.10" && "${{ inputs.sublevel }}" -le 209 ]]; then
           SHOW_PAD_FIX=1
-        elif [[ "${{ inputs.android_version }}" = "android13" && "${{ inputs.kernel_version }}" = "5.10" && "${{ inputs.sublevel }}" -le 209 && "${{ inputs.os_patch_level }}" != "2024-05" ]]; then
+        elif [[ "${{ inputs.version }}" = "android13-5.10" && "${{ inputs.sublevel }}" -le 209 && "${{ inputs.os_patch_level }}" != "2024-05" ]]; then
           SHOW_PAD_FIX=1
-        elif [[ "${{ inputs.android_version }}" = "android13" && "${{ inputs.kernel_version }}" = "5.15" && "${{ inputs.sublevel }}" -le 148 && "${{ inputs.os_patch_level }}" != "2024-05" ]]; then
+        elif [[ "${{ inputs.version }}" = "android13-5.15" && "${{ inputs.sublevel }}" -le 148 && "${{ inputs.os_patch_level }}" != "2024-05" ]]; then
           SHOW_PAD_FIX=1
-        elif [[ "${{ inputs.android_version }}" = "android14" && "${{ inputs.kernel_version }}" = "5.15" && "${{ inputs.sublevel }}" -le 148 && "${{ inputs.os_patch_level }}" != "2024-05" ]]; then
+        elif [[ "${{ inputs.version }}" = "android14-5.15" && "${{ inputs.sublevel }}" -le 148 && "${{ inputs.os_patch_level }}" != "2024-05" ]]; then
           SHOW_PAD_FIX=1
-        elif [[ "${{ inputs.android_version }}" = "android14" && "${{ inputs.kernel_version }}" = "6.1" && "${{ inputs.sublevel }}" -le 75 && "${{ inputs.os_patch_level }}" != "2024-05" ]]; then
+        elif [[ "${{ inputs.version }}" = "android14-6.1" && "${{ inputs.sublevel }}" -le 75 && "${{ inputs.os_patch_level }}" != "2024-05" ]]; then
           SHOW_PAD_FIX=1
         fi
 

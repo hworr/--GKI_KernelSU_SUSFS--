@@ -48,12 +48,10 @@ jobs:
             VARIANTS=$(jq -cn --arg v "${{ inputs.variant }}" '[$v]')
           fi
 
-          # Build { "include": [ {kernel_version:..., variant: ...}, ... ] }
+          # Build { "include": [ {android_version:..., kernel_version:..., sublevel:..., os_patch_level:..., variant: ...}, ... ] }
           FINAL=$(jq -cn \
             --argjson cfg "$CONFIG_JSON" \
             --argjson variants "$VARIANTS" '
-            def dedup($items): reduce $items[] as $item ([]; if any(.[]; . == $item) then . else . + [$item] end);
-
             ($cfg.version | split("-")) as $version_parts
             | {
               include: (
@@ -61,6 +59,7 @@ jobs:
                   $cfg.include[] as $item
                   | $variants[] as $build_variant
                   | {
+                      version: $cfg.version,
                       android_version: $version_parts[0],
                       kernel_version: $version_parts[1],
                       sublevel: $item.sublevel,
@@ -69,17 +68,18 @@ jobs:
                     }
                 ]
                 + [
-                  $cfg.include[]
-                  | select(.variant != null)
+                  $cfg.include[] as $item
+                  | select($item.variant != null)
                   | {
+                      version: $cfg.version,
                       android_version: $version_parts[0],
                       kernel_version: $version_parts[1],
-                      sublevel: .sublevel,
-                      os_patch_level: .date,
-                      variant: "Normal",
-                      config_variant: .variant
+                      sublevel: $item.sublevel,
+                      os_patch_level: $item.date,
+                      variant: $item.variant
                     }
                 ]
+                | unique_by([.android_version, .kernel_version, .sublevel, .os_patch_level, .variant])
               )
             }')
 
@@ -92,12 +92,12 @@ jobs:
       matrix: ${{ fromJson(needs.generate-matrix.outputs.matrix) }}
     uses: ./.github/workflows/build.yml
     with:
+      version: ${{ matrix.version }}
       android_version: ${{ matrix.android_version }}
       kernel_version: ${{ matrix.kernel_version }}
       sublevel: ${{ matrix.sublevel }}
       os_patch_level: ${{ matrix.os_patch_level }}
       variant: ${{ matrix.variant }}
-      config_variant: ${{ matrix.config_variant || '' }}
       feature_set: ${{ inputs.feature_set }}
       use_repo: ${{ inputs.use_repo }}
     secrets: inherit

@@ -1,6 +1,9 @@
 name: 'Kernel Fixes'
 description: 'Applies compatibility fixes based on android/kernel/sublevel'
 inputs:
+  version:
+    required: true
+    type: string
   android_version:
     required: true
     type: string
@@ -39,9 +42,9 @@ runs:
             MAKEFILE_FIXED="false"
           fi
           echo "MAKEFILE_FIXED=$MAKEFILE_FIXED" >> $GITHUB_ENV
-          if [[ "${{ inputs.android_version }}" == "android13" && "${{ inputs.kernel_version }}" == "5.10" && "${{ inputs.sublevel }}" -le 186 ]] || \
-             [[ "${{ inputs.android_version }}" == "android13" && "${{ inputs.kernel_version }}" == "5.15" && "${{ inputs.sublevel }}" -le 119 ]] || \
-             [[ "${{ inputs.android_version }}" == "android14" && "${{ inputs.kernel_version }}" == "5.15" && "${{ inputs.sublevel }}" -le 110 ]]; then
+           if [[ "${{ inputs.version }}" == "android13-5.10" && "${{ inputs.sublevel }}" -le 186 ]] || \
+             [[ "${{ inputs.version }}" == "android13-5.15" && "${{ inputs.sublevel }}" -le 119 ]] || \
+             [[ "${{ inputs.version }}" == "android14-5.15" && "${{ inputs.sublevel }}" -le 110 ]]; then
             echo "[INFO] Applying parse-options.c fixes."
             sed -i '/char \*buf = NULL;/a int i;' tools/lib/subcmd/parse-options.c 2>/dev/null || true
             sed -i 's/for (int i = 0; subcommands\[i\]; i++) {/for (i = 0; subcommands[i]; i++) {/' tools/lib/subcmd/parse-options.c 2>/dev/null || true
@@ -57,7 +60,7 @@ runs:
 
     - name: 'Apply mmap.c fix for specific versions'
       shell: bash
-      if: ${{ inputs.kernel_version == '6.6' && inputs.android_version == 'android15' && inputs.sublevel <= '58' }}
+      if: ${{ inputs.version == 'android15-6.6' && inputs.sublevel <= '58' }}
       working-directory: ${{ github.workspace }}/kernel/common
       run: |
         echo "[INFO] Checking for android15 + kernel 6.6 include fix..."
@@ -76,7 +79,7 @@ runs:
 
     - name: 'Apply mmap.c fix for specific versions'
       shell: bash
-      if: ${{ (inputs.kernel_version == '5.10' && inputs.android_version == 'android12' && inputs.sublevel == 226) || (inputs.kernel_version == '5.10' && inputs.android_version == 'android13' && inputs.sublevel == 223) || (inputs.kernel_version == '5.15' && inputs.android_version == 'android13' && inputs.sublevel == 167)  || (inputs.kernel_version == '5.10' && inputs.android_version == 'android13' && inputs.sublevel == 223) || (inputs.kernel_version == '5.15' && inputs.android_version == 'android14' && inputs.sublevel == 167) }}
+      if: ${{ (inputs.version == 'android12-5.10' && inputs.sublevel == 226) || (inputs.version == 'android13-5.10' && inputs.sublevel == 223) || (inputs.version == 'android13-5.15' && inputs.sublevel == 167) || (inputs.version == 'android14-5.15' && inputs.sublevel == 167) }}
       working-directory: ${{ github.workspace }}/kernel/common
       run: |
         echo "[INFO] Applying mmap.c fix for specific version combo."
