@@ -1,41 +1,154 @@
 {
+  "version": "android13-5.15",
   "include": [
-    {"kernel_version": "5.15.41-android13-2022-06"},
-    {"kernel_version": "5.15.41-android13-2022-07"},
-    {"kernel_version": "5.15.41-android13-2022-08"},
-    {"kernel_version": "5.15.41-android13-2022-09"},
-    {"kernel_version": "5.15.41-android13-2022-10"},
-    {"kernel_version": "5.15.41-android13-2022-11"},
-    {"kernel_version": "5.15.74-android13-2022-12"},
-    {"kernel_version": "5.15.74-android13-2023-01"},
-    {"kernel_version": "5.15.78-android13-2023-02"},
-    {"kernel_version": "5.15.78-android13-2023-03"},
-    {"kernel_version": "5.15.94-android13-2023-04"},
-    {"kernel_version": "5.15.94-android13-2023-05"},
-    {"kernel_version": "5.15.104-android13-2023-06"},
-    {"kernel_version": "5.15.104-android13-2023-07"},
-    {"kernel_version": "5.15.119-android13-2023-08"},
-    {"kernel_version": "5.15.119-android13-2023-09"},
-    {"kernel_version": "5.15.123-android13-2023-10"},
-    {"kernel_version": "5.15.123-android13-2023-11"},
-    {"kernel_version": "5.15.137-android13-2023-12"},
-    {"kernel_version": "5.15.137-android13-2024-01"},
-    {"kernel_version": "5.15.144-android13-2024-02"},
-    {"kernel_version": "5.15.144-android13-2024-03"},
-    {"kernel_version": "5.15.148-android13-2024-04"},
-    {"kernel_version": "5.15.148-android13-2024-05"},
-    {"kernel_version": "5.15.149-android13-2024-06"},
-    {"kernel_version": "5.15.149-android13-2024-07"},
-    {"kernel_version": "5.15.151-android13-2024-08"},
-    {"kernel_version": "5.15.153-android13-2024-09"},
-    {"kernel_version": "5.15.167-android13-2024-11"},
-    {"kernel_version": "5.15.170-android13-2025-01"},
-    {"kernel_version": "5.15.178-android13-2025-03"},
-    {"kernel_version": "5.15.180-android13-2025-05"},
-    {"kernel_version": "5.15.185-android13-2025-07"},
-    {"kernel_version": "5.15.189-android13-2025-09"},
-    {"kernel_version": "5.15.194-android13-2025-12"},
-    {"kernel_version": "5.15.197-android13-2026-03"},
-    {"kernel_version": "5.15.X-android13-lts"}
+    {
+      "sublevel": "41",
+      "date": "2022-06"
+    },
+    {
+      "sublevel": "41",
+      "date": "2022-07"
+    },
+    {
+      "sublevel": "41",
+      "date": "2022-08"
+    },
+    {
+      "sublevel": "41",
+      "date": "2022-09"
+    },
+    {
+      "sublevel": "41",
+      "date": "2022-10"
+    },
+    {
+      "sublevel": "41",
+      "date": "2022-11"
+    },
+    {
+      "sublevel": "74",
+      "date": "2022-12"
+    },
+    {
+      "sublevel": "74",
+      "date": "2023-01"
+    },
+    {
+      "sublevel": "78",
+      "date": "2023-02"
+    },
+    {
+      "sublevel": "78",
+      "date": "2023-03"
+    },
+    {
+      "sublevel": "94",
+      "date": "2023-04"
+    },
+    {
+      "sublevel": "94",
+      "date": "2023-05"
+    },
+    {
+      "sublevel": "104",
+      "date": "2023-06"
+    },
+    {
+      "sublevel": "104",
+      "date": "2023-07"
+    },
+    {
+      "sublevel": "119",
+      "date": "2023-08"
+    },
+    {
+      "sublevel": "119",
+      "date": "2023-09"
+    },
+    {
+      "sublevel": "123",
+      "date": "2023-10"
+    },
+    {
+      "sublevel": "123",
+      "date": "2023-11"
+    },
+    {
+      "sublevel": "137",
+      "date": "2023-12"
+    },
+    {
+      "sublevel": "137",
+      "date": "2024-01"
+    },
+    {
+      "sublevel": "144",
+      "date": "2024-02"
+    },
+    {
+      "sublevel": "144",
+      "date": "2024-03"
+    },
+    {
+      "sublevel": "148",
+      "date": "2024-04"
+    },
+    {
+      "sublevel": "148",
+      "date": "2024-05"
+    },
+    {
+      "sublevel": "149",
+      "date": "2024-06"
+    },
+    {
+      "sublevel": "149",
+      "date": "2024-07"
+    },
+    {
+      "sublevel": "151",
+      "date": "2024-08"
+    },
+    {
+      "sublevel": "153",
+      "date": "2024-09"
+    },
+    {
+      "sublevel": "167",
+      "date": "2024-11"
+    },
+    {
+      "sublevel": "170",
+      "date": "2025-01"
+    },
+    {
+      "sublevel": "178",
+      "date": "2025-03"
+    },
+    {
+      "sublevel": "180",
+      "date": "2025-05"
+    },
+    {
+      "sublevel": "185",
+      "date": "2025-07"
+    },
+    {
+      "sublevel": "189",
+      "date": "2025-09",
+      "variant": "boot-time"
+    },
+    {
+      "sublevel": "194",
+      "date": "2025-12"
+    },
+    {
+      "sublevel": "197",
+      "date": "2026-03"
+    },
+    {
+      "sublevel": "X",
+      "date": "lts"
+    }
   ]
 }

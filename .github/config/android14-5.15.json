@@ -1,26 +1,93 @@
 {
+  "version": "android14-5.15",
   "include": [
-    {"kernel_version": "5.15.110-android14-2023-06"},
-    {"kernel_version": "5.15.110-android14-2023-08"},
-    {"kernel_version": "5.15.110-android14-2023-09"},
-    {"kernel_version": "5.15.131-android14-2023-11"},
-    {"kernel_version": "5.15.137-android14-2024-01"},
-    {"kernel_version": "5.15.144-android14-2024-02"},
-    {"kernel_version": "5.15.144-android14-2024-03"},
-    {"kernel_version": "5.15.148-android14-2024-04"},
-    {"kernel_version": "5.15.148-android14-2024-05"},
-    {"kernel_version": "5.15.149-android14-2024-06"},
-    {"kernel_version": "5.15.153-android14-2024-07"},
-    {"kernel_version": "5.15.158-android14-2024-08"},
-    {"kernel_version": "5.15.164-android14-2024-09"},
-    {"kernel_version": "5.15.167-android14-2024-11"},
-    {"kernel_version": "5.15.170-android14-2025-01"},
-    {"kernel_version": "5.15.178-android14-2025-03"},
-    {"kernel_version": "5.15.180-android14-2025-05"},
-    {"kernel_version": "5.15.185-android14-2025-07"},
-    {"kernel_version": "5.15.192-android14-2025-10"},
-    {"kernel_version": "5.15.196-android14-2026-01"},
-    {"kernel_version": "5.15.202-android14-2026-04"},
-    {"kernel_version": "5.15.X-android14-lts"}
+    {
+      "sublevel": "110",
+      "date": "2023-06"
+    },
+    {
+      "sublevel": "110",
+      "date": "2023-08"
+    },
+    {
+      "sublevel": "110",
+      "date": "2023-09"
+    },
+    {
+      "sublevel": "131",
+      "date": "2023-11"
+    },
+    {
+      "sublevel": "137",
+      "date": "2024-01"
+    },
+    {
+      "sublevel": "144",
+      "date": "2024-02"
+    },
+    {
+      "sublevel": "144",
+      "date": "2024-03"
+    },
+    {
+      "sublevel": "148",
+      "date": "2024-04"
+    },
+    {
+      "sublevel": "148",
+      "date": "2024-05"
+    },
+    {
+      "sublevel": "149",
+      "date": "2024-06"
+    },
+    {
+      "sublevel": "153",
+      "date": "2024-07"
+    },
+    {
+      "sublevel": "158",
+      "date": "2024-08"
+    },
+    {
+      "sublevel": "164",
+      "date": "2024-09"
+    },
+    {
+      "sublevel": "167",
+      "date": "2024-11"
+    },
+    {
+      "sublevel": "170",
+      "date": "2025-01"
+    },
+    {
+      "sublevel": "178",
+      "date": "2025-03"
+    },
+    {
+      "sublevel": "180",
+      "date": "2025-05"
+    },
+    {
+      "sublevel": "185",
+      "date": "2025-07"
+    },
+    {
+      "sublevel": "192",
+      "date": "2025-10"
+    },
+    {
+      "sublevel": "196",
+      "date": "2026-01"
+    },
+    {
+      "sublevel": "202",
+      "date": "2026-04"
+    },
+    {
+      "sublevel": "X",
+      "date": "lts"
+    }
   ]
 }

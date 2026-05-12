@@ -6,10 +6,22 @@ permissions:
 on:
   workflow_call:
     inputs:
+      android_version:
+        required: true
+        type: string
       kernel_version:
         required: true
         type: string
+      sublevel:
+        required: true
+        type: string
+      os_patch_level:
+        required: true
+        type: string
       variant:
+        required: false
+        type: string
+      config_variant:
         required: false
         type: string
       feature_set:
@@ -21,19 +33,13 @@ on:
 
 jobs:
   build-gki:
-    name: "${{ inputs.kernel_version }} (${{ inputs.variant }})"
+    name: "${{ inputs.android_version }}-${{ inputs.kernel_version }}.${{ inputs.sublevel }}-${{ inputs.os_patch_level }} (${{ inputs.variant }} / ${{ inputs.config_variant || 'base' }})"
     runs-on: ubuntu-latest
     timeout-minutes: 60
 
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v5
-
-    - name: Parse kernel version
-      id: parse
-      uses: ./.github/actions/parse-kernel-version
-      with:
-        kernel_version: ${{ inputs.kernel_version }}
 
     - name: Free Disk Space
       if: false
@@ -64,24 +70,29 @@ jobs:
     - name: Download Kernel Repository
       uses: ./.github/actions/download-kernel
       with:
-        android_version: ${{ steps.parse.outputs.android_version }}
-        kernel_version: ${{ steps.parse.outputs.kernel_version }}
-        os_patch_level: ${{ steps.parse.outputs.os_patch_level }}
+        android_version: ${{ inputs.android_version }}
+        kernel_version: ${{ inputs.kernel_version }}
+        os_patch_level: ${{ inputs.os_patch_level }}
         use_repo: ${{ inputs.use_repo }}
 
     - name: Extract Sublevel and Set File Name
       id: extract
       uses: ./.github/actions/extract-sublevel-file-name
       with:
+        android_version: ${{ inputs.android_version }}
+        kernel_version: ${{ inputs.kernel_version }}
+        sublevel: ${{ inputs.sublevel }}
+        os_patch_level: ${{ inputs.os_patch_level }}
         variant: ${{ inputs.variant }}
+        config_variant: ${{ inputs.config_variant }}
 
     - name: Kernel Fixes
       uses: ./.github/actions/kernel-fixes
       with:
-        android_version: ${{ steps.parse.outputs.android_version }}
-        kernel_version: ${{ steps.parse.outputs.kernel_version }}
+        android_version: ${{ inputs.android_version }}
+        kernel_version: ${{ inputs.kernel_version }}
         sublevel: ${{ steps.extract.outputs.sublevel }}
-        os_patch_level: ${{ steps.parse.outputs.os_patch_level }}
+        os_patch_level: ${{ inputs.os_patch_level }}
 
     - name: Setup KernelSU-Next
       if: contains(inputs.feature_set, 'KSUN') || inputs.feature_set == 'FULL'
@@ -91,9 +102,9 @@ jobs:
       if: contains(inputs.feature_set, 'SUSFS') || inputs.feature_set == 'FULL'
       uses: ./.github/actions/susfs
       with:
-        android_version: ${{ steps.parse.outputs.android_version }}
-        kernel_version: ${{ steps.parse.outputs.kernel_version }}
-        os_patch_level: ${{ steps.parse.outputs.os_patch_level }}
+        android_version: ${{ inputs.android_version }}
+        kernel_version: ${{ inputs.kernel_version }}
+        os_patch_level: ${{ inputs.os_patch_level }}
         sublevel: ${{ steps.extract.outputs.sublevel }}
 
     - name: Baseband Guard
@@ -104,32 +115,33 @@ jobs:
       if: contains(inputs.feature_set, 'NET') || inputs.feature_set == 'FULL'
       uses: ./.github/actions/networking
       with:
-        kernel_version: ${{ steps.parse.outputs.kernel_version }}
-        android_version: ${{ steps.parse.outputs.android_version }}
+        kernel_version: ${{ inputs.kernel_version }}
+        android_version: ${{ inputs.android_version }}
 
     - name: DroidSpaces-OSS Patches
       if: contains(inputs.feature_set, 'DS') || inputs.feature_set == 'FULL'
       uses: ./.github/actions/droidspaces
       with:
-        kernel_version: ${{ steps.parse.outputs.kernel_version }}
+        kernel_version: ${{ inputs.kernel_version }}
 
     - name: Setup Misc Configs
       uses: ./.github/actions/misc
       with:
-        kernel_version: ${{ steps.parse.outputs.kernel_version }}
-        android_version: ${{ steps.parse.outputs.android_version }}
+        kernel_version: ${{ inputs.kernel_version }}
+        android_version: ${{ inputs.android_version }}
         sublevel: ${{ steps.extract.outputs.sublevel }}
+        config_variant: ${{ inputs.config_variant }}
 
     - name: Apply Module Check Bypass
       if: ${{ inputs.variant == 'Bypass' }}
       uses: ./.github/actions/module-check-bypass
       with:
-        kernel_version: ${{ steps.parse.outputs.kernel_version }}
+        kernel_version: ${{ inputs.kernel_version }}
 
     - name: Apply Device-Specific Patches
       uses: ./.github/actions/apply-device-patches
       with:
-        kernel_version: ${{ steps.parse.outputs.kernel_version }}
+        kernel_version: ${{ inputs.kernel_version }}
 
     - name: Apply ABI Compare Bypass
       if: false
@@ -155,8 +167,8 @@ jobs:
       uses: ./.github/actions/apply-kernel-branding
       with:
         variant: ${{ inputs.variant }}
-        kernel_version: ${{ steps.parse.outputs.kernel_version }}
-        android_version: ${{ steps.parse.outputs.android_version }}
+        kernel_version: ${{ inputs.kernel_version }}
+        android_version: ${{ inputs.android_version }}
         sublevel: ${{ steps.extract.outputs.sublevel }}
 
     - name: Remove Protected Exports
