@@ -49,7 +49,6 @@ runs:
         elif [ "${{ inputs.version }}" == "android13-5.15" ]; then
           cp ${{ github.workspace }}/Droidspaces-OSS/Documentation/resources/kernel-patches/GKI/below-kernel-6.12/001.GKI-below-6.12-fix_sysvipc_kabi_6_7_8.patch ./
           patch -p1 < 001.GKI-below-6.12-fix_sysvipc_kabi_6_7_8.patch
-        fi
         elif [ "${{ inputs.version }}" == "android12-5.10" ] || [ "${{ inputs.version }}" == "android13-5.10" ] || [ "${{ inputs.version }}" == "android13-5.15" ]; then
           cp ${{ github.workspace }}/Droidspaces-OSS/Documentation/resources/kernel-patches/GKI/below-kernel-6.12/001.GKI-below-6.12-fix_sysvipc_kabi_6_7_8.patch ./
           patch -p1 < 001.GKI-below-6.12-fix_sysvipc_kabi_6_7_8.patch
