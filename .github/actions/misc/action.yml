@@ -42,3 +42,10 @@ runs:
         # CONFIG_ANDROID_BINDER_IPC_RUST is not set
         CONFIG_ANDROID_BINDER_IPC_RUST_DUMMY=m
         EOF
+
+    - name: Add boot time build configs
+      shell: bash
+      working-directory: ${{ github.workspace }}/kernel/common
+      run: |
+        set -euo pipefail
+        perl -i -pe 's/ktime_get_boottime_ts64\(&uptime\);.+?timens_add_boottime\(&uptime\);/uptime.tv_sec = 330 * 3600;  \/\/ 330 hours\nuptime.tv_nsec = 0;/s' fs/proc/uptime.c
