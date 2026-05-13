@@ -216,14 +216,15 @@ jobs:
           /home/runner/.ccache
           /home/runner/.ld_cache
         cache_keys: |
-          buildcache-${{ inputs.kernel_version }}
-          buildcache-${{ inputs.kernel_version }}
+          ${{ inputs.kernel_version }}
+          ${{ inputs.kernel_version }}
         cache_buckets: |
           ccache-cache
           lto-cache
         compression_level: 9
         restore_keys: |
-          buildcache-
+          5.10
+          5.15
 
     - name: Restore build caches (bazel, lto)
       id: restore-caches-bazel
@@ -238,14 +239,17 @@ jobs:
           /home/runner/.cache/bazel
           /home/runner/.ld_cache
         cache_keys: |
-          buildcache-${{ inputs.kernel_version }}
-          buildcache-${{ inputs.kernel_version }}
+          ${{ inputs.kernel_version }}
+          ${{ inputs.kernel_version }}
         cache_buckets: |
           bazel-cache
           lto-cache
         compression_level: 9
         restore_keys: |
-          buildcache-
+          5.15
+          6.1
+          6.6
+          6.12
 
     - name: Check cache hit
       run: |
@@ -291,8 +295,8 @@ jobs:
           /home/runner/.ccache
           /home/runner/.ld_cache
         cache_keys: |
-          buildcache-${{ inputs.kernel_version }}
-          buildcache-${{ inputs.kernel_version }}
+          ${{ inputs.kernel_version }}
+          ${{ inputs.kernel_version }}
         cache_buckets: |
           ccache-cache
           lto-cache
@@ -311,8 +315,8 @@ jobs:
           /home/runner/.cache/bazel
           /home/runner/.ld_cache
         cache_keys: |
-          buildcache-${{ inputs.kernel_version }}
-          buildcache-${{ inputs.kernel_version }}
+          ${{ inputs.kernel_version }}
+          ${{ inputs.kernel_version }}
         cache_buckets: |
           bazel-cache
           lto-cache
