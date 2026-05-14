@@ -74,5 +74,7 @@ runs:
       working-directory: ${{ github.workspace }}/kernel/common
       run: |
         grep -n "get_pid_ns" include/linux/pid_namespace.h | head -n 5
-        sed -i '1,/static.*inline.*get_pid_ns/ { /static.*inline.*get_pid_ns/ { s@.*@extern struct pid_namespace *get_pid_ns(struct pid_namespace *ns);@; :a; N; /\n[[:space:]]*}[[:space:]]*$/!ba; :b; s/\n.*\n/\n/; tb; s/\n$//; } }' include/linux/pid_namespace.h
+        while grep -q 'static.*inline.*get_pid_ns' include/linux/pid_namespace.h; do
+          sed -i '1,/static.*inline.*get_pid_ns/ { /static.*inline.*get_pid_ns/ { s@.*@extern struct pid_namespace *get_pid_ns(struct pid_namespace *ns);@; :a; N; /\n[[:space:]]*}[[:space:]]*$/!ba; :b; s/\n.*\n/\n/; tb; s/\n$//; } }' include/linux/pid_namespace.h
+        done
         grep -n "get_pid_ns" include/linux/pid_namespace.h | head -n 5
