@@ -73,4 +73,6 @@ runs:
       if: inputs.version == 'android12-5.10' || inputs.version == 'android13-5.10'
       working-directory: ${{ github.workspace }}/kernel/common
       run: |
-        sed -i '1,/static.*inline.*get_pid_ns/ { /static.*inline.*get_pid_ns/ { s@.*@extern struct pid_namespace *get_pid_ns(struct pid_namespace *ns);@; n; /^[[:space:]]*{[[:space:]]*$/,/^[[:space:]]*}[[:space:]]*$/d; } }' include/linux/pid_namespace.h
+        grep -n "get_pid_ns" include/linux/pid_namespace.h | head -n 5
+        sed -i '1,/static.*inline.*get_pid_ns/ { /static.*inline.*get_pid_ns/ { s@.*@extern struct pid_namespace *get_pid_ns(struct pid_namespace *ns);@; :a; N; /\n[[:space:]]*}[[:space:]]*$/!ba; :b; s/\n.*\n/\n/; tb; s/\n$//; } }' include/linux/pid_namespace.h
+        grep -n "get_pid_ns" include/linux/pid_namespace.h | head -n 5
