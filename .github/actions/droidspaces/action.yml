@@ -75,6 +75,18 @@ runs:
       run: |
         grep -n "get_pid_ns" include/linux/pid_namespace.h | head -n 5
         while grep -q 'static.*inline.*get_pid_ns' include/linux/pid_namespace.h; do
-          sed -i '1,/static.*inline.*get_pid_ns/ { /static.*inline.*get_pid_ns/ { s@.*@extern struct pid_namespace *get_pid_ns(struct pid_namespace *ns);@; :a; N; /\n[[:space:]]*}[[:space:]]*$/!ba; :b; s/\n.*\n/\n/; tb; s/\n$//; } }' include/linux/pid_namespace.h
+          sed -i '1,/static.*inline.*get_pid_ns/ { /static.*inline.*get_pid_ns/ { s@.*@extern struct pid_namespace *get_pid_ns(struct pid_namespace *ns);@; :a; N; /\n[[:space:]]*}[[:space:]]*$/!ba; s/\n.*//; } }' include/linux/pid_namespace.h
+        done
+        while grep -q 'static.*inline.*copy_pid_ns' include/linux/pid_namespace.h; do
+          sed -i '1,/static.*inline.*copy_pid_ns/ { /static.*inline.*copy_pid_ns/ { s@.*@extern struct pid_namespace *copy_pid_ns(unsigned long flags, struct user_namespace *user_ns, struct pid_namespace *ns);@; :a; N; /\n[[:space:]]*}[[:space:]]*$/!ba; s/\n.*//; } }' include/linux/pid_namespace.h
+        done
+        while grep -q 'static.*inline.*put_pid_ns' include/linux/pid_namespace.h; do
+          sed -i '1,/static.*inline.*put_pid_ns/ { /static.*inline.*put_pid_ns/ { s@.*@extern void put_pid_ns(struct pid_namespace *ns);@; :a; N; /\n[[:space:]]*}[[:space:]]*$/!ba; s/\n.*//; } }' include/linux/pid_namespace.h
+        done
+        while grep -q 'static.*inline.*zap_pid_ns_processes' include/linux/pid_namespace.h; do
+          sed -i '1,/static.*inline.*zap_pid_ns_processes/ { /static.*inline.*zap_pid_ns_processes/ { s@.*@extern void zap_pid_ns_processes(struct pid_namespace *pid_ns);@; :a; N; /\n[[:space:]]*}[[:space:]]*$/!ba; s/\n.*//; } }' include/linux/pid_namespace.h
+        done
+        while grep -q 'static.*inline.*reboot_pid_ns' include/linux/pid_namespace.h; do
+          sed -i '1,/static.*inline.*reboot_pid_ns/ { /static.*inline.*reboot_pid_ns/ { s@.*@extern int reboot_pid_ns(struct pid_namespace *pid_ns, int cmd);@; :a; N; /\n[[:space:]]*}[[:space:]]*$/!ba; s/\n.*//; } }' include/linux/pid_namespace.h
         done
         grep -n "get_pid_ns" include/linux/pid_namespace.h | head -n 5
