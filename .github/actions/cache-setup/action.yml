@@ -66,7 +66,6 @@ runs:
         echo CCACHE_COMPRESSION_LEVEL="3" >> $GITHUB_ENV
         export CCACHE_DIRECT="true"
         echo CCACHE_DIRECT="true" >> "$GITHUB_ENV"
-        Temporarily disabled for cache hit testing
         export CCACHE_FILE_CLONE="true"
         echo CCACHE_FILE_CLONE="true" >> "$GITHUB_ENV"
         Temporarily disabled for cache hit testing
