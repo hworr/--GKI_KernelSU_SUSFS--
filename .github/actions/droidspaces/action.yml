@@ -89,4 +89,23 @@ runs:
         while grep -q 'static.*inline.*reboot_pid_ns' include/linux/pid_namespace.h; do
           sed -i '1,/static.*inline.*reboot_pid_ns/ { /static.*inline.*reboot_pid_ns/ { s@.*@extern int reboot_pid_ns(struct pid_namespace *pid_ns, int cmd);@; :a; N; /\n[[:space:]]*}[[:space:]]*$/!ba; s/\n.*//; } }' include/linux/pid_namespace.h
         done
+
+        while grep -q 'static.*inline.*sem_init_ns' ipc/util.h; do
+          sed -i '1,/static.*inline.*sem_init_ns/ { /static.*inline.*sem_init_ns/ { s@.*@void sem_init_ns(struct ipc_namespace *ns);@; } }' ipc/util.h
+        done
+        while grep -q 'static.*inline.*msg_init_ns' ipc/util.h; do
+          sed -i '1,/static.*inline.*msg_init_ns/ { /static.*inline.*msg_init_ns/ { s@.*@void msg_init_ns(struct ipc_namespace *ns);@; } }' ipc/util.h
+        done
+        while grep -q 'static.*inline.*shm_init_ns' ipc/util.h; do
+          sed -i '1,/static.*inline.*shm_init_ns/ { /static.*inline.*shm_init_ns/ { s@.*@void shm_init_ns(struct ipc_namespace *ns);@; } }' ipc/util.h
+        done
+        while grep -q 'static.*inline.*sem_exit_ns' ipc/util.h; do
+          sed -i '1,/static.*inline.*sem_exit_ns/ { /static.*inline.*sem_exit_ns/ { s@.*@void sem_exit_ns(struct ipc_namespace *ns);@; } }' ipc/util.h
+        done
+        while grep -q 'static.*inline.*msg_exit_ns' ipc/util.h; do
+          sed -i '1,/static.*inline.*msg_exit_ns/ { /static.*inline.*msg_exit_ns/ { s@.*@void msg_exit_ns(struct ipc_namespace *ns);@; } }' ipc/util.h
+        done
+        while grep -q 'static.*inline.*shm_exit_ns' ipc/util.h; do
+          sed -i '1,/static.*inline.*shm_exit_ns/ { /static.*inline.*shm_exit_ns/ { s@.*@void shm_exit_ns(struct ipc_namespace *ns);@; } }' ipc/util.h
+        done
         grep -n "get_pid_ns" include/linux/pid_namespace.h | head -n 5
