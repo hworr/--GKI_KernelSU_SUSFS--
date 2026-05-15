@@ -61,8 +61,6 @@ runs:
       working-directory: ${{ github.workspace }}/kernel
       run: |
         cat >> "${{ github.workspace }}/wild_gki.fragment" << 'EOF'
-        CONFIG_ANDROID_KABI_RESERVE=y
-        CONFIG_ANDROID_VENDOR_OEM_DATA=y
         CONFIG_SYSVIPC=y
         CONFIG_POSIX_MQUEUE=y
         CONFIG_IPC_NS=y
