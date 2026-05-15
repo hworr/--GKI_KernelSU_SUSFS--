@@ -61,51 +61,11 @@ runs:
       working-directory: ${{ github.workspace }}/kernel
       run: |
         cat >> "${{ github.workspace }}/wild_gki.fragment" << 'EOF'
+        CONFIG_ANDROID_KABI_RESERVE=y
+        CONFIG_ANDROID_VENDOR_OEM_DATA=y
         CONFIG_SYSVIPC=y
         CONFIG_POSIX_MQUEUE=y
         CONFIG_IPC_NS=y
         CONFIG_PID_NS=y
         CONFIG_DEVTMPFS=y
         EOF
-
-    - name: Fix 5.10
-      shell: bash
-      if: inputs.version == 'android12-5.10' || inputs.version == 'android13-5.10'
-      working-directory: ${{ github.workspace }}/kernel/common
-      run: |
-        grep -n "get_pid_ns" include/linux/pid_namespace.h | head -n 5
-        while grep -q 'static.*inline.*get_pid_ns' include/linux/pid_namespace.h; do
-          sed -i '1,/static.*inline.*get_pid_ns/ { /static.*inline.*get_pid_ns/ { s@.*@extern struct pid_namespace *get_pid_ns(struct pid_namespace *ns);@; :a; N; /\n[[:space:]]*}[[:space:]]*$/!ba; s/\n.*//; } }' include/linux/pid_namespace.h
-        done
-        while grep -q 'static.*inline.*copy_pid_ns' include/linux/pid_namespace.h; do
-          sed -i '1,/static.*inline.*copy_pid_ns/ { /static.*inline.*copy_pid_ns/ { s@.*@extern struct pid_namespace *copy_pid_ns(unsigned long flags, struct user_namespace *user_ns, struct pid_namespace *ns);@; :a; N; /\n[[:space:]]*}[[:space:]]*$/!ba; s/\n.*//; } }' include/linux/pid_namespace.h
-        done
-        while grep -q 'static.*inline.*put_pid_ns' include/linux/pid_namespace.h; do
-          sed -i '1,/static.*inline.*put_pid_ns/ { /static.*inline.*put_pid_ns/ { s@.*@extern void put_pid_ns(struct pid_namespace *ns);@; :a; N; /\n[[:space:]]*}[[:space:]]*$/!ba; s/\n.*//; } }' include/linux/pid_namespace.h
-        done
-        while grep -q 'static.*inline.*zap_pid_ns_processes' include/linux/pid_namespace.h; do
-          sed -i '1,/static.*inline.*zap_pid_ns_processes/ { /static.*inline.*zap_pid_ns_processes/ { s@.*@extern void zap_pid_ns_processes(struct pid_namespace *pid_ns);@; :a; N; /\n[[:space:]]*}[[:space:]]*$/!ba; s/\n.*//; } }' include/linux/pid_namespace.h
-        done
-        while grep -q 'static.*inline.*reboot_pid_ns' include/linux/pid_namespace.h; do
-          sed -i '1,/static.*inline.*reboot_pid_ns/ { /static.*inline.*reboot_pid_ns/ { s@.*@extern int reboot_pid_ns(struct pid_namespace *pid_ns, int cmd);@; :a; N; /\n[[:space:]]*}[[:space:]]*$/!ba; s/\n.*//; } }' include/linux/pid_namespace.h
-        done
-
-        while grep -q 'static.*inline.*sem_init_ns' ipc/util.h; do
-          sed -i '1,/static.*inline.*sem_init_ns/ { /static.*inline.*sem_init_ns/ { s@.*@void sem_init_ns(struct ipc_namespace *ns);@; } }' ipc/util.h
-        done
-        while grep -q 'static.*inline.*msg_init_ns' ipc/util.h; do
-          sed -i '1,/static.*inline.*msg_init_ns/ { /static.*inline.*msg_init_ns/ { s@.*@void msg_init_ns(struct ipc_namespace *ns);@; } }' ipc/util.h
-        done
-        while grep -q 'static.*inline.*shm_init_ns' ipc/util.h; do
-          sed -i '1,/static.*inline.*shm_init_ns/ { /static.*inline.*shm_init_ns/ { s@.*@void shm_init_ns(struct ipc_namespace *ns);@; } }' ipc/util.h
-        done
-        while grep -q 'static.*inline.*sem_exit_ns' ipc/util.h; do
-          sed -i '1,/static.*inline.*sem_exit_ns/ { /static.*inline.*sem_exit_ns/ { s@.*@void sem_exit_ns(struct ipc_namespace *ns);@; } }' ipc/util.h
-        done
-        while grep -q 'static.*inline.*msg_exit_ns' ipc/util.h; do
-          sed -i '1,/static.*inline.*msg_exit_ns/ { /static.*inline.*msg_exit_ns/ { s@.*@void msg_exit_ns(struct ipc_namespace *ns);@; } }' ipc/util.h
-        done
-        while grep -q 'static.*inline.*shm_exit_ns' ipc/util.h; do
-          sed -i '1,/static.*inline.*shm_exit_ns/ { /static.*inline.*shm_exit_ns/ { s@.*@void shm_exit_ns(struct ipc_namespace *ns);@; } }' ipc/util.h
-        done
-        grep -n "get_pid_ns" include/linux/pid_namespace.h | head -n 5
