@@ -248,16 +248,11 @@ runs:
       working-directory: ${{ github.workspace }}/kernel/common
       run: |
         echo "Reverting 6.6 Fake Patches"
-        if [ "${{ inputs.sublevel }}" -le "58" ]; then
-          echo "Reverting task_mmu.c Android 15 6.6 Fake Patch"
-          sed -i '/unsigned int nr_subpages.*__PAGE_SIZE.*PAGE_SIZE/d' fs/proc/task_mmu.c
-          sed -i '/pagemap_entry_t.*res.*NULL/d' fs/proc/task_mmu.c
-        fi
         if [ "${{ inputs.sublevel }}" -le "92" ]; then
           echo "Reverting base.c Android 15 6.6 Fake Patch"
           sed -i '/^#include <linux\/dma-buf.h>$/d' fs/proc/base.c
         fi
-        if [ "${{ inputs.sublevel }}" -ge "57" ]; then
+        if [ "${{ inputs.sublevel }}" -le "57" ]; then
           echo "Reverting memory.c Android 15 6.6 Fake Patch"
           sed -i '/^#include <linux\/zswap.h>$/d' mm/memory.c
         fi
