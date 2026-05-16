@@ -142,11 +142,11 @@ jobs:
       with:
         kernel_version: ${{ inputs.kernel_version }}
 
-    - name: Apply Device-Specific Patches
-      uses: ./.github/actions/apply-device-patches
-      with:
-        version: ${{ inputs.version }}
-        kernel_version: ${{ inputs.kernel_version }}
+    # - name: Apply Device-Specific Patches
+    #   uses: ./.github/actions/apply-device-patches
+    #   with:
+    #     version: ${{ inputs.version }}
+    #     kernel_version: ${{ inputs.kernel_version }}
 
     - name: Apply ABI Compare Bypass
       if: false
