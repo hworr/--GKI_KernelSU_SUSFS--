@@ -139,7 +139,7 @@ runs:
 
     - name: Apply Android 15 6.6 Fake Patches
       shell: bash
-      if: inputs.version == 'android15-6.6' && false
+      if: inputs.version == 'android15-6.6'
       working-directory: ${{ github.workspace }}/kernel/common
       run: |
         echo "Applying 6.6 SUSFS fixes"
@@ -244,7 +244,7 @@ runs:
 
     - name: Revert Android 15 6.6 Fake Patches
       shell: bash
-      if: inputs.version == 'android15-6.6' && false
+      if: inputs.version == 'android15-6.6'
       working-directory: ${{ github.workspace }}/kernel/common
       run: |
         echo "Reverting 6.6 Fake Patches"
